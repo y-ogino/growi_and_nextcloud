@@ -2,26 +2,26 @@ version: '3.5'
 
 volumes:
   nextcloud:
-  db:
+  mariadb:
 
 services:
-  db:
+  mariadb:
     image: mariadb
     restart: always
     volumes:
-      - db:/var/lib/mysql
+      - mariadb:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
 
-  app:
-    build: ./app
+  nextcloud:
+    build: ./nextcloud
     ports:
       - 8080:80
     links:
-      - db
+      - mariadb
     volumes:
       - nextcloud:/var/www/html
     restart: always
@@ -32,8 +32,8 @@ services:
       - LETSENCRYPT_HOST=${HOST}
       - LETSENCRYPT_EMAIL=${EMAIL}
 
-  web:
-    build: ./web
+  nginx:
+    build: ./nginx
     restart: always
     volumes:
       - nextcloud:/var/www/html:ro
@@ -42,7 +42,7 @@ services:
       - LETSENCRYPT_HOST=${HOST}
       - LETSENCRYPT_EMAIL=${EMAIL}
     depends_on:
-      - app
+      - nextcloud
 
 networks:
   default:
