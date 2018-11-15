@@ -46,4 +46,4 @@ services:
 
 networks:
   default:
-    name: ${NETWORK_NAME}
+    name: proxy
