@@ -26,10 +26,10 @@ services:
       - nextcloud:/var/www/html
     restart: always
     environment:
-      - NEXTCLOUD_TRUSTED_DOMAINS=${HOST}
-      - VIRTUAL_HOST=${HOST}
+      - NEXTCLOUD_TRUSTED_DOMAINS=${NEXTCLOUD_HOST}
+      - VIRTUAL_HOST=${NEXTCLOUD_HOST}
       - VIRTUAL_PORT=8080
-      - LETSENCRYPT_HOST=${HOST}
+      - LETSENCRYPT_HOST=${NEXTCLOUD_HOST}
       - LETSENCRYPT_EMAIL=${EMAIL}
 
 networks:

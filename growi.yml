@@ -2,9 +2,7 @@ version: '3.5'
 
 services:
   growi:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
+    build: ./growi
     ports:
       - 3000:3000
     links:
@@ -22,9 +20,9 @@ services:
       # - PLANTUML_URI=http://  # activate this line and specify if you use your own PlantUML server rather than public plantuml.com
       # - HACKMD_URI=http://    # activate this line and specify HackMD server URI which can be accessed from GROWI client browsers
       # - HACKMD_URI_FOR_SERVER=http://hackmd:3000  # activate this line and specify HackMD server URI which can be accessed from this server container
-      - VIRTUAL_HOST=${HOST}
+      - VIRTUAL_HOST=${GROWI_HOST}
       - VIRTUAL_PORT=3000
-      - LETSENCRYPT_HOST=${HOST}
+      - LETSENCRYPT_HOST=${GROWI_HOST}
       - LETSENCRYPT_EMAIL=${EMAIL}
 
     command: "dockerize
