@@ -90,6 +90,8 @@ services:
       - 8080:80
     links:
       - mariadb
+    depends_on:
+      - mariadb
     volumes:
       - nextcloud:/var/www/html
     restart: always
