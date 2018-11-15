@@ -1,6 +1,29 @@
 version: '3.5'
 
 services:
+  proxy:
+    build: ./proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    labels:
+      com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
+    volumes:
+      - certs:/etc/nginx/certs:ro
+      - vhost.d:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    restart: always
+
+  letsencrypt-companion:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    restart: always
+    volumes:
+      - certs:/etc/nginx/certs
+      - vhost.d:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
   growi:
     build: ./growi
     ports:
@@ -54,14 +77,45 @@ services:
       - es_plugins:/usr/share/elasticsearch/plugins
       - ./esconfig:/usr/share/elasticsearch/config
 
+  mariadb:
+    image: mariadb
+    restart: always
+    volumes:
+      - mariadb:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+
+  nextcloud:
+    build: ./nextcloud
+    ports:
+      - 8080:80
+    links:
+      - mariadb
+    volumes:
+      - nextcloud:/var/www/html
+    restart: always
+    environment:
+      - NEXTCLOUD_TRUSTED_DOMAINS=${NEXTCLOUD_HOST}
+      - VIRTUAL_HOST=${NEXTCLOUD_HOST}
+      - VIRTUAL_PORT=8080
+      - LETSENCRYPT_HOST=${NEXTCLOUD_HOST}
+      - LETSENCRYPT_EMAIL=${EMAIL}
+
 volumes:
+  certs:
+  vhost.d:
+  html:
   growi_data:
   mongo_configdb:
   mongo_db:
   es_data:
   es_plugins:
+  nextcloud:
+  mariadb:
 
 networks:
   default:
-    external:
-      name: proxy
+    name: proxy
