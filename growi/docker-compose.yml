@@ -65,4 +65,5 @@ volumes:
 
 networks:
   default:
-    name: ${NETWORK_NAME}
+    external:
+      name: proxy
