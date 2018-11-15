@@ -32,18 +32,6 @@ services:
       - LETSENCRYPT_HOST=${HOST}
       - LETSENCRYPT_EMAIL=${EMAIL}
 
-  web:
-    build: ./web
-    restart: always
-    volumes:
-      - nextcloud:/var/www/html:ro
-    environment:
-      - VIRTUAL_HOST=${HOST}
-      - LETSENCRYPT_HOST=${HOST}
-      - LETSENCRYPT_EMAIL=${EMAIL}
-    depends_on:
-      - app
-
 networks:
   default:
     name: proxy
