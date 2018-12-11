@@ -57,6 +57,7 @@ services:
     environment:
       ROUTE_URIS: logstash://logstash:5000
       LOGSTASH_TAGS: docker-elk
+      RETRY_SEND: "10"
     networks:
       - elk
     depends_on:
