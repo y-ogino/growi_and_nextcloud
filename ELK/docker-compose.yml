@@ -8,7 +8,9 @@ services:
       args:
         ELK_VERSION: $ELK_VERSION
     volumes:
-      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+      - es_data:/usr/share/elasticsearch/data
+      - es_plugins:/usr/share/elasticsearch/plugins
+      - ./elasticsearch/config:/usr/share/elasticsearch/config
     ports:
       - "9200:9200"
       - "9300:9300"
@@ -63,6 +65,10 @@ services:
     depends_on:
       - logstash
     restart: on-failure
+
+volumes:
+  es_data:
+  es_plugins:
 
 networks:
   elk:
