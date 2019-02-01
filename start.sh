@@ -6,3 +6,6 @@ docker-compose up -d
 
 cd ../nextcloud
 docker-compose up -d
+
+cd ../ELK
+docker-compose up -d
